@@ -1,0 +1,10 @@
+# Dockerfile.backend
+FROM python:3.9
+
+WORKDIR /app
+
+COPY arxiv_paper_getter.py /app/arxiv_paper_getter.py
+
+RUN pip install flask requests
+
+CMD ["python", "arxiv_paper_getter.py"]
