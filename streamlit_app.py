@@ -5,12 +5,8 @@ from pathlib import Path
 import tempfile
 import shutil
 import re
-try:
-    from tkinter import filedialog
-    import tkinter as tk
-    TKINTER_AVAILABLE = True
-except ImportError:
-    TKINTER_AVAILABLE = False
+# Remove tkinter dependency to avoid threading issues with Streamlit
+TKINTER_AVAILABLE = False
 
 # Get backend URL from environment variable or default to localhost
 BACKEND_URL = os.getenv('BACKEND_URL', 'http://localhost:5001')
@@ -25,52 +21,70 @@ if 'download_folder' not in st.session_state:
 
 st.title('Anvexan - Arxiv Paper Search')
 
-def select_folder():
-    """Open a native folder picker dialog"""
-    if not TKINTER_AVAILABLE:
-        st.sidebar.error("❌ Folder picker not available. Please enter path manually.")
-        return None
+def get_common_folders():
+    """Get list of common folder locations"""
+    home = Path.home()
+    common_folders = [
+        str(home / 'Downloads'),
+        str(home / 'Documents'),
+        str(home / 'Desktop'),
+        str(home),
+    ]
     
+    # Add current working directory
     try:
-        # Create a root window and hide it
-        root = tk.Tk()
-        root.withdraw()
-        root.wm_attributes('-topmost', 1)
-        
-        # Open folder dialog
-        folder_path = filedialog.askdirectory(
-            title="Select Download Folder",
-            initialdir=st.session_state.download_folder
-        )
-        
-        # Clean up
-        root.destroy()
-        
-        return folder_path if folder_path else None
-    except Exception as e:
-        st.sidebar.error(f"❌ Error opening folder picker: {str(e)}")
-        return None
+        current_dir = str(Path.cwd())
+        if current_dir not in common_folders:
+            common_folders.append(current_dir)
+    except:
+        pass
+    
+    # Filter to only existing directories
+    return [folder for folder in common_folders if Path(folder).exists()]
+
+def select_folder_web():
+    """Web-safe folder selection using selectbox"""
+    common_folders = get_common_folders()
+    
+    # Add current folder if not in common folders
+    current_folder = st.session_state.download_folder
+    if current_folder and current_folder not in common_folders:
+        common_folders.insert(0, current_folder)
+    
+    # Add custom option
+    options = ["📝 Enter custom path..."] + [f"📁 {folder}" for folder in common_folders]
+    
+    selected = st.selectbox(
+        "Quick select:",
+        options,
+        index=1 if len(common_folders) > 0 else 0,
+        key="folder_quick_select"
+    )
+    
+    if selected.startswith("📁 "):
+        return selected[2:]  # Remove emoji prefix
+    else:
+        return None  # User wants to enter custom path
 
 # Download folder selection
 st.sidebar.header('Download Settings')
 
 # Folder picker section
-col1, col2 = st.sidebar.columns([3, 1])
+st.sidebar.write("**Folder Selection:**")
 
-with col1:
-    download_folder = st.text_input(
-        'Download Folder (optional)', 
-        value=st.session_state.download_folder,
-        help='Enter the path where you want to download PDFs',
-        key='folder_input'
-    )
+# Quick folder selection
+quick_folder = select_folder_web()
+if quick_folder and quick_folder != st.session_state.download_folder:
+    st.session_state.download_folder = quick_folder
+    st.rerun()
 
-with col2:
-    if st.button('📂', help='Browse for folder', key='browse_button'):
-        selected_folder = select_folder()
-        if selected_folder:
-            st.session_state.download_folder = selected_folder
-            st.rerun()
+# Manual folder input
+download_folder = st.sidebar.text_input(
+    'Custom Download Folder (optional)', 
+    value=st.session_state.download_folder,
+    help='Enter the path where you want to download PDFs',
+    key='folder_input'
+)
 
 # Update session state if folder input changed
 if download_folder != st.session_state.download_folder:
@@ -224,7 +238,7 @@ if st.session_state.search_results:
 # Add instructions
 with st.expander("ℹ️ How to use"):
     st.write("""
-    1. **Set Download Folder**: Enter a custom folder path in the sidebar or click 📂 to browse
+    1. **Set Download Folder**: Select from common folders or enter a custom path
     2. **Create Folder**: Click 'Create Folder' if the folder doesn't exist
     3. **Search**: Enter keywords related to the papers you're looking for
     4. **Browse**: Click on paper titles to expand and read abstracts
