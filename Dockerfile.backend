@@ -7,4 +7,6 @@ COPY arxiv_paper_getter.py /app/arxiv_paper_getter.py
 
 RUN pip install flask requests
 
+EXPOSE 5001
+
 CMD ["python", "arxiv_paper_getter.py"]
