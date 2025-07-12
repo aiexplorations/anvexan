@@ -10,6 +10,10 @@ fi
 echo "Activating virtual environment..."
 source venv/bin/activate
 
+# Run tests
+echo "Running tests..."
+python -m pytest test_app.py -v || { echo 'Tests failed' ; exit 1; }
+
 # Start backend in background
 echo "Starting backend server..."
 python arxiv_paper_getter.py &

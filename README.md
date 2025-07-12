@@ -1,4 +1,4 @@
-# ArXiv Paper Getter
+# Anvexan - Arxiv Paper Search
 
 A powerful and user-friendly application for searching and downloading research papers from ArXiv. This application provides a clean web interface for discovering academic papers and downloading them directly to your local machine.
 
@@ -37,7 +37,7 @@ graph LR
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd arxiv_paper_getter
+   cd anvexan
    ```
 
 2. Run the application:
@@ -63,7 +63,7 @@ The script will automatically:
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd arxiv_paper_getter
+   cd anvexan
    ```
 
 2. Create and activate a virtual environment:
@@ -123,7 +123,7 @@ streamlit run streamlit_app.py --server.port=8501 --server.address=0.0.0.0
 
 ### Project Structure
 ```
-arxiv_paper_getter/
+anvexan/
 ├── arxiv_paper_getter.py    # Flask backend API
 ├── streamlit_app.py         # Streamlit frontend
 ├── requirements.txt         # Python dependencies
@@ -186,8 +186,8 @@ We welcome contributions! Here's how to get started:
 1. Fork the repository
 2. Clone your fork:
    ```bash
-   git clone https://github.com/yourusername/arxiv_paper_getter.git
-   cd arxiv_paper_getter
+   git clone https://github.com/yourusername/anvexan.git
+   cd anvexan
    ```
 3. Create a virtual environment and install dependencies:
    ```bash

@@ -5,6 +5,12 @@ from pathlib import Path
 import tempfile
 import shutil
 import re
+try:
+    from tkinter import filedialog
+    import tkinter as tk
+    TKINTER_AVAILABLE = True
+except ImportError:
+    TKINTER_AVAILABLE = False
 
 # Get backend URL from environment variable or default to localhost
 BACKEND_URL = os.getenv('BACKEND_URL', 'http://localhost:5001')
@@ -14,16 +20,61 @@ if 'search_results' not in st.session_state:
     st.session_state.search_results = []
 if 'last_query' not in st.session_state:
     st.session_state.last_query = ""
+if 'download_folder' not in st.session_state:
+    st.session_state.download_folder = str(Path.home() / 'Downloads')
 
-st.title('ArXiv Paper Search')
+st.title('Anvexan - Arxiv Paper Search')
+
+def select_folder():
+    """Open a native folder picker dialog"""
+    if not TKINTER_AVAILABLE:
+        st.sidebar.error("❌ Folder picker not available. Please enter path manually.")
+        return None
+    
+    try:
+        # Create a root window and hide it
+        root = tk.Tk()
+        root.withdraw()
+        root.wm_attributes('-topmost', 1)
+        
+        # Open folder dialog
+        folder_path = filedialog.askdirectory(
+            title="Select Download Folder",
+            initialdir=st.session_state.download_folder
+        )
+        
+        # Clean up
+        root.destroy()
+        
+        return folder_path if folder_path else None
+    except Exception as e:
+        st.sidebar.error(f"❌ Error opening folder picker: {str(e)}")
+        return None
 
 # Download folder selection
 st.sidebar.header('Download Settings')
-download_folder = st.sidebar.text_input(
-    'Download Folder (optional)', 
-    value=str(Path.home() / 'Downloads'),
-    help='Enter the path where you want to download PDFs'
-)
+
+# Folder picker section
+col1, col2 = st.sidebar.columns([3, 1])
+
+with col1:
+    download_folder = st.text_input(
+        'Download Folder (optional)', 
+        value=st.session_state.download_folder,
+        help='Enter the path where you want to download PDFs',
+        key='folder_input'
+    )
+
+with col2:
+    if st.button('📂', help='Browse for folder', key='browse_button'):
+        selected_folder = select_folder()
+        if selected_folder:
+            st.session_state.download_folder = selected_folder
+            st.rerun()
+
+# Update session state if folder input changed
+if download_folder != st.session_state.download_folder:
+    st.session_state.download_folder = download_folder
 
 # Create folder button
 if st.sidebar.button('📁 Create Folder'):
@@ -173,7 +224,7 @@ if st.session_state.search_results:
 # Add instructions
 with st.expander("ℹ️ How to use"):
     st.write("""
-    1. **Set Download Folder**: Enter a custom folder path in the sidebar (optional)
+    1. **Set Download Folder**: Enter a custom folder path in the sidebar or click 📂 to browse
     2. **Create Folder**: Click 'Create Folder' if the folder doesn't exist
     3. **Search**: Enter keywords related to the papers you're looking for
     4. **Browse**: Click on paper titles to expand and read abstracts
