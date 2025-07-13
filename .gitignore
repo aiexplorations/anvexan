@@ -54,12 +54,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# VS Code
-.vscode/
-
-# PyCharm
-.idea/
-
 # Local envs
 .env
 .venv
@@ -69,16 +63,9 @@ ENV/
 env.bak/
 venv.bak/
 
-# Streamlit cache
-.streamlit/
-
 # Flask instance folder
 instance/
 *.db
-
-# Docker
-*.log
-docker-compose.override.yml
 
 # OS files
 .DS_Store
@@ -101,3 +88,35 @@ pdfs/
 secrets.env
 *.secret
 *.key
+
+# Node.js / React Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+frontend/build/
+frontend/dist/
+.npm
+
+# React environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ESLint cache
+.eslintcache
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# VS Code
+.vscode/
+
+# PyCharm / IntelliJ
+.idea/
+
+# Temporary files
+*.tmp
+*.temp

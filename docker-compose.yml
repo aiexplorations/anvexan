@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Flask Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: anvexan-backend
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=arxiv_paper_getter.py
+    networks:
+      - anvexan-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend-react
+    container_name: anvexan-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - anvexan-network
+    restart: unless-stopped
+    environment:
+      - REACT_APP_API_BASE_URL=http://backend:5001
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  anvexan-network:
+    driver: bridge
+
+volumes:
+  # Optional: for persistent downloads
+  downloads:
+    driver: local
