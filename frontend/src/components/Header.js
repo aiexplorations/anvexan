@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaGithub, FaSearch, FaDownload } from 'react-icons/fa';
+import ThemeToggle from './ThemeToggle';
 import './Header.css';
 
 const Header = () => {
@@ -13,6 +14,8 @@ const Header = () => {
           </div>
           
           <nav className="nav">
+            <ThemeToggle />
+            
             <a 
               href="https://github.com/aiexplorations/anvexan" 
               target="_blank" 

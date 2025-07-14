@@ -11,9 +11,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-gradient);
   min-height: 100vh;
-  color: #333;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
 }
 
 .App {
@@ -38,13 +39,14 @@ body {
 
 /* Search section */
 .search-section {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-secondary);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 40px;
   margin-bottom: 30px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-primary);
+  border: 1px solid var(--border-secondary);
+  transition: all 0.3s ease;
 }
 
 .search-container {
@@ -56,7 +58,7 @@ body {
 .search-title {
   font-size: 3rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -65,18 +67,20 @@ body {
 
 .search-subtitle {
   font-size: 1.2rem;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 40px;
+  transition: color 0.3s ease;
 }
 
 /* Results section */
 .results-section {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-secondary);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 30px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-primary);
+  border: 1px solid var(--border-secondary);
+  transition: all 0.3s ease;
 }
 
 .results-header {
@@ -91,37 +95,42 @@ body {
 .results-header h2 {
   font-size: 2rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .results-count {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1rem;
-  background: rgba(102, 126, 234, 0.1);
+  background: var(--accent-hover);
   padding: 8px 16px;
   border-radius: 20px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  border: 1px solid var(--border-primary);
+  transition: all 0.3s ease;
 }
 
 /* Empty state */
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-secondary);
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-primary);
+  transition: all 0.3s ease;
 }
 
 .empty-state-content h3 {
   font-size: 1.5rem;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 10px;
+  transition: color 0.3s ease;
 }
 
 .empty-state-content p {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1rem;
+  transition: color 0.3s ease;
 }
 
 /* Responsive design */
@@ -172,14 +181,15 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(102, 126, 234, 0.5);
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(102, 126, 234, 0.7);
+  background: var(--scrollbar-thumb-hover);
 }
