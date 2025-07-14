@@ -5,6 +5,10 @@ import re
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy", "message": "AnveXan API is running"})
+
 @app.route('/search', methods=['GET'])
 def search_papers():
     query = request.args.get('query')
